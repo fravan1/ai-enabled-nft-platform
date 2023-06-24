@@ -51,10 +51,48 @@ def get_asset(contract_address, token_id):
         # download the image & call the convert_to_binary function
         image_data = urllib.request.urlopen(image_url).read()
         generated_data = process_image(image_data)
-        print(generated_data)
+        # Storing the generated data in a text file
+        with open('data.txt', 'w') as outfile:
+            outfile.write(str(generated_data))
     else:
         print("Error:", response.status_code, response.text)
 
 
 get_asset('0x629A673A8242c2AC4B7B8C5D8735fbeac21A6205', '1270989104761746854939651153331927477999454739203555626306833872706963209653')
 
+# Uploading each new text file generated from the json dump of get_asset() to IPFS Storage
+# using the base API : https://api.web3.storage/
+
+def upload_file(file):
+
+    # Bearer token received during authentication
+    bearer_token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweGYyN2IxMDkxRjRiNDVFNzJERDg1RjBlRTY5RTIzMzcwOTgyQTkwRTAiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2ODc1OTQzNjA2MzIsIm5hbWUiOiJFVEhXYXRlcmxvbyJ9.fakf24JjopVQLKIuLOwq6BrV5HAGd1sPdacHe9OsZdw'
+
+    # API endpoint URL
+    url = 'https://api.web3.storage/upload'
+
+    # Request headers with the Authorization header containing the bearer token
+    headers = {
+        'Authorization': f'Bearer {bearer_token}',
+        'Accept': 'application/json'
+    }
+
+    # Request payload (multipart/form-data)
+    files = {
+        'file': ('data.txt', open('data.txt', 'rb'), 'text/plain')
+    }
+
+    # Send the POST request
+    response = requests.post(url, headers=headers, files=files)
+
+    # Check the response
+    if response.status_code == 200:
+        print('Request succeeded!')
+        print(response.json())  # Access the response body
+    else:
+        print(f'Request failed with status code {response.status_code}')
+        print(response.text)  # Access the error message if available
+
+
+with open('data.txt', 'rb') as f:
+    upload_file(f)

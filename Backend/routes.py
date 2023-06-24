@@ -66,3 +66,4 @@ def get_asset(contract_address, token_id):
         return process_image(image_data)
     else:
         return("Error:", response.status_code, response.text)
+
