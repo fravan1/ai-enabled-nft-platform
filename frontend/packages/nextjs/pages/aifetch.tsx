@@ -2,23 +2,15 @@
 //
 import { NextPage } from "next";
 import { MetaHeader } from "~~/components/MetaHeader";
-import { ContractUI } from "~~/components/scaffold-eth";
+import AiFetch from "~~/components/aifetch";
 
 const AIFetch: NextPage = () => {
-    return (
-        <>
-        <MetaHeader
-            title="AI Fetch | Scaffold-ETH"
-            description="AI Fetch"
-        />
-        <div className="flex flex-col gap-y-6 lg:gap-y-8 py-8 lg:py-12 justify-center items-center">
-            <ContractUI
-            contractName="AIFetch"
-            className=""
-            />
-        </div>
-        </>
-    );
-    }
+  return (
+    <>
+      <MetaHeader title="AI Fetch | Scaffold-ETH" description="AI Fetch" />
+      <AiFetch />
+    </>
+  );
+};
 
 export default AIFetch;
