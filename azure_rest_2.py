@@ -1,23 +1,12 @@
 import requests
-from flask import jsonify
-import requests
 import urllib.request
-
-from Backend import Backend
-
-# The backend only has API based access from the frontend and does not have any
-# HTML pages to render. The routes are defined here.
-
-# API route to query the asset from the opensea API
-# The API is called with the asset contract address and the token id
-# The API returns a JSON object with the asset details
+from base64 import b64encode
 
 # Azure Cognitive Services API endpoint and key
-endpoint = "https://waterlootest.cognitiveservices.azure.com/vision/v3.2/analyze"
+endpoint = "https://waterlootest/computervision/imageanalysis:analyze&api-version=2023-02-01-preview"
 api_key = "e7b18d719c324918a038199c4d9564eb"
 # Features to include in the analysis
-features = "Adult,Brands,Categories,Color,Description,Faces,ImageType,Objects,Tags"
-
+features = "caption,denseCaption,objects,tags"
 
 def process_image(data):
     # Prepare the headers
@@ -32,20 +21,18 @@ def process_image(data):
         'language': 'en'
     }
 
+    breakpoint()
+
     # Send the REST request
     response = requests.post(endpoint, headers=headers, params=params, data=data)
 
     # Handle the response
     if response.status_code == 200:
-        return(response.json())
+        print(response.json())
+        breakpoint()
     else:
-        return("Error:", response.status_code, response.text)    
+        return("Error:", response.status_code, response.text)
 
-@Backend.route('/')
-def index():
-    return jsonify({'message': 'Welcome to the backend'})
-
-@Backend.route('/api/v1/get_asset/<contract_address>/<token_id>')
 def get_asset(contract_address, token_id):
     url = 'https://api.opensea.io/api/v1/asset/' + contract_address + '/' + token_id + '/'
 
@@ -63,6 +50,11 @@ def get_asset(contract_address, token_id):
         image_url = data['image_url']
         # download the image & call the convert_to_binary function
         image_data = urllib.request.urlopen(image_url).read()
-        return process_image(image_data)
+        generated_data = process_image(image_data)
+        print(generated_data)
     else:
-        return("Error:", response.status_code, response.text)
+        print("Error:", response.status_code, response.text)
+
+
+get_asset('0x629A673A8242c2AC4B7B8C5D8735fbeac21A6205', '1270989104761746854939651153331927477999454739203555626306833872706963209653')
+
