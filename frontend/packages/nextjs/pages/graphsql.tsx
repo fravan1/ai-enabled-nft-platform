@@ -1,11 +1,11 @@
 import type { NextPage } from "next";
 import { MetaHeader } from "~~/components/MetaHeader";
 
-const XMTP: NextPage = () => {
+const GRAPHSQL: NextPage = () => {
   return (
     <>
       <MetaHeader
-        title="XMTP | Discoviya"
+        title="NFT BUNDLE | Discoviya"
         description="XMTP created with Discoviya, showcasing some of its features.">
       </MetaHeader>
       
@@ -13,4 +13,4 @@ const XMTP: NextPage = () => {
   );
 };
 
-export default XMTP;
+export default GRAPHSQL;
