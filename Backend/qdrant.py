@@ -2,6 +2,7 @@ from qdrant_client import QdrantClient
 from qdrant_client.models import Distance, VectorParams, PointStruct
 import json, csv
 import numpy as np
+from gensim.models import Word2Vec
 
 # Function to create a Qdrant client
 qdrant_client = QdrantClient(
@@ -17,17 +18,30 @@ with open('metadata.csv', 'r') as file:
 
 # Calling the create_collection function to create a collection named "test_collection" & store the data in it
 
-qdrant_client.recreate_collection(
-    collection_name="test_collection",
-    vectors_config=VectorParams(size=100, distance=Distance.COSINE),
+# qdrant_client.recreate_collection(
+#     collection_name="test_collection",
+#     vectors_config=VectorParams(size=100, distance=Distance.COSINE),
+# )
+
+sentences = data[1][2:]
+model = Word2Vec(sentences, vector_size=100, window=5, min_count=5, workers=4)
+model.build_vocab(sentences)
+model.train(sentences, total_examples=model.corpus_count, epochs=model.epochs)
+
+# Defining the point containing the vector, the id as the contract address(from data), and payload as the entire row
+point = PointStruct(
+    id=1,
+    vector=model.wv.vectors.tolist()[0],
+    payload={
+        "image_url": data[1][0],
+        "address": data[1][1],
+        "chain_identifier": data[1][2],
+        "schema_name": data[1][3],
+        "description": data[1][4],
+        "last_sale": data[1][5],
+        "rich_data": data[1][6]
+    }
 )
-
-# Tokenizing the data and adding it to the collection using client.upsert
-
-
-print(point)
-
-breakpoint()
 
 # adding the point to the collection using client.upsert
 qdrant_client.upsert(
@@ -35,5 +49,4 @@ qdrant_client.upsert(
     points=[point],
 )
 
-# viewing the recently added data in the collection
-qdrant_client.describe_collection(collection_name="test_collection")
+
