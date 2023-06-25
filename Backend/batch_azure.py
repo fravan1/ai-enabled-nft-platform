@@ -1,22 +1,13 @@
 import requests
-from flask import jsonify
-import requests
 import urllib.request
-
-from Backend import Backend
-
-# The backend only has API based access from the frontend and does not have any
-# HTML pages to render. The routes are defined here.
-
-# API route to query the asset from the opensea API
-# The API is called with the asset contract address and the token id
-# The API returns a JSON object with the asset details
+import csv
 
 # Azure Cognitive Services API endpoint and key
 endpoint = "https://waterlootest.cognitiveservices.azure.com/vision/v3.2/analyze"
 api_key = "e7b18d719c324918a038199c4d9564eb"
 # Features to include in the analysis
 features = "Adult,Brands,Categories,Color,Description,Faces,ImageType,Objects,Tags"
+
 
 def process_image(data):
     # Prepare the headers
@@ -40,11 +31,6 @@ def process_image(data):
     else:
         return("Error:", response.status_code, response.text)
 
-@Backend.route('/')
-def index():
-    return jsonify({'message': 'Welcome to the backend'})
-
-@Backend.route('/api/v1/get_asset/<contract_address>/<token_id>')
 def get_asset(contract_address, token_id):
     # OpenSea API endpoint for a specific asset
     endpoint = f"https://api.opensea.io/api/v1/asset/{contract_address}/{token_id}"
@@ -90,23 +76,49 @@ def get_asset(contract_address, token_id):
     else:
         print("Error:", response.status_code, response.text)
 
-
-    # Returning a Json object with Image URL, Address, Chain Identifier, Schema Name, Description, Last Sale, rich_data
-    return jsonify({
-        'image_url': image_url,
-        'address': address,
-        'chain_identifier': chain_identifier,
-        'schema_name': schema_name,
-        'description': description,
-        'last_sale': last_sale,
-        'rich_data': rich_data
-    })
-
     # Save data to CSV file
-    # with open('metadata.csv', 'w', newline='') as file:
-    #     writer = csv.writer(file)
-    #     writer.writerow(['Image URL', 'Address', 'Chain Identifier', 'Schema Name', 'Description', 'Last Sale', 'rich_data'])
-    #     writer.writerow([image_url, address, chain_identifier, schema_name, description, last_sale, rich_data])
+    with open('metadata.csv', 'w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(['Image URL', 'Address', 'Chain Identifier', 'Schema Name', 'Description', 'Last Sale', 'rich_data'])
+        writer.writerow([image_url, address, chain_identifier, schema_name, description, last_sale, rich_data])
 
-    # print("Data saved to metadata.csv file.")
+    print("Data saved to metadata.csv file.")
 
+# going through all the assets in the collection & calling the get_asset() function for each asset
+def get_all_assets():
+    for i in range(1, 10):
+        get_asset('0x495f947276749ce646f68ac8c248420045cb7b5e', str(i))
+
+
+# Uploading each new text file generated from the json dump of get_asset() to IPFS Storage
+# using the base API : https://api.web3.storage/
+
+def upload_file(file):
+
+    # Bearer token received during authentication
+    bearer_token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweGYyN2IxMDkxRjRiNDVFNzJERDg1RjBlRTY5RTIzMzcwOTgyQTkwRTAiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2ODc1OTQzNjA2MzIsIm5hbWUiOiJFVEhXYXRlcmxvbyJ9.fakf24JjopVQLKIuLOwq6BrV5HAGd1sPdacHe9OsZdw'
+
+    # API endpoint URL
+    url = 'https://api.web3.storage/upload'
+
+    # Request headers with the Authorization header containing the bearer token
+    headers = {
+        'Authorization': f'Bearer {bearer_token}',
+        'Accept': 'application/json'
+    }
+
+    # Request payload (multipart/form-data)
+    files = {
+        'file': ('data.txt', open('data.txt', 'rb'), 'text/plain')
+    }
+
+    # Send the POST request
+    response = requests.post(url, headers=headers, files=files)
+
+    # Check the response
+    if response.status_code == 200:
+        print('Request succeeded!')
+        print(response.json())  # Access the response body
+    else:
+        print(f'Request failed with status code {response.status_code}')
+        print(response.text)  # Access the error message if available

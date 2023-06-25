@@ -30,6 +30,7 @@
   },
   "packageManager": "yarn@3.2.3",
   "devDependencies": {
+    "alchemy-sdk": "^2.9.1",
     "husky": "^8.0.1",
     "lint-staged": "^13.0.3"
   },
@@ -37,6 +38,7 @@
     "usehooks-ts@^2.7.2": "patch:usehooks-ts@npm:^2.7.2#./.yarn/patches/usehooks-ts-npm-2.7.2-fceffe0e43.patch"
   },
   "dependencies": {
-    "flowbite": "^1.6.6"
+    "moralis": "^2.22.3",
+    "react-moralis": "^1.4.2"
   }
 }
