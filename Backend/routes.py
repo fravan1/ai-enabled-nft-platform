@@ -45,7 +45,7 @@ def upload_file(file):
     if response.status_code == 200:
         print('Request succeeded!')
         # returning CID for further usage
-        return response.json()['value']['cid']
+        return response.json()['cid']
     else:
         print(f'Request failed with status code {response.status_code}')
         return None
@@ -121,12 +121,12 @@ def get_asset(contract_address, token_id):
     # Adding the image_metadata & rich_data to a single JSON object
     image_metadata['rich_data'] = rich_data
 
-    # Uploading the image_metadata to IPFS Storage via json text file
+    # Opening data.txt file in write mode & writing the image_metadata to the file
     with open('data.txt', 'w') as outfile:
         json.dump(image_metadata, outfile)
-    
-    upload_file('data.txt')
 
+    # Calling the upload_file function to upload the data.txt file to IPFS
+    image_metadata['cid'] = upload_file('data.txt')
 
     # Returning a Json object with Image URL, Address, Chain Identifier, Schema Name, Description, Last Sale, rich_data
     return jsonify(image_metadata)  
