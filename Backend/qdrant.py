@@ -12,37 +12,37 @@ qdrant_client = QdrantClient(
 )
 
 # Loading the metadata.csv file and parsing row, by row, where each row deontes a token
-with open('metadata.csv', 'r') as file:
-    reader = csv.reader(file)
-    data = list(reader)
-    # print(data)
+# with open('metadata.csv', 'r') as file:
+#     reader = csv.reader(file)
+#     data = list(reader)
+#     # print(data)
 
 # Calling the create_collection function to create a collection named "test_collection" & store the data in it
 
 # qdrant_client.recreate_collection(
-#     collection_name="test_collection",
-#     vectors_config=VectorParams(size=100, distance=Distance.COSINE),
+#     collection_name="Noun",
+#     vectors_config=VectorParams(size=768, distance=Distance.COSINE),
 # )
 
-sentences = data[1][2:]
-model = Word2Vec(sentences, vector_size=384, window=5, min_count=5, workers=4)
-model.build_vocab(sentences)
-model.train(sentences, total_examples=model.corpus_count, epochs=model.epochs)
+# sentences = data[1][2:]
+# model = Word2Vec(sentences, vector_size=384, window=5, min_count=5, workers=4)
+# model.build_vocab(sentences)
+# model.train(sentences, total_examples=model.corpus_count, epochs=model.epochs)
 
 # Defining the point containing the vector, the id as the contract address(from data), and payload as the entire row
-point = PointStruct(
-    id=1,
-    vector=model.wv.vectors.tolist()[0],
-    payload={
-        "image_url": data[1][0],
-        "address": data[1][1],
-        "chain_identifier": data[1][2],
-        "schema_name": data[1][3],
-        "description": data[1][4],
-        "last_sale": data[1][5],
-        "rich_data": data[1][6]
-    }
-)
+# point = PointStruct(
+#     id=1,
+#     vector=model.wv.vectors.tolist()[0],
+#     payload={
+#         "image_url": data[1][0],
+#         "address": data[1][1],
+#         "chain_identifier": data[1][2],
+#         "schema_name": data[1][3],
+#         "description": data[1][4],
+#         "last_sale": data[1][5],
+#         "rich_data": data[1][6]
+#     }
+# )
 
 # adding the point to the collection using client.upsert
 # qdrant_client.upsert(
@@ -64,8 +64,8 @@ class Searcher:
     
     def search(self, text):
         # Convert text to vector
-        model = SentenceTransformer('paraphrase-MiniLM-L6-v2')
-        embeddings = model.encode(query_text)
+        model = SentenceTransformer('paraphrase-distilroberta-base-v1')
+        embeddings = model.encode(text)
 
         # use vector to search for closest vectors in the collection
         search_result = self.qdrant_client.search(
@@ -79,10 +79,10 @@ class Searcher:
     
 
 # Creating a new instance of the Searcher class
-searcher = Searcher(collection_name="test_collection")
+searcher = Searcher(collection_name="Noun")
 
 # Searching for the closest vectors to the word "cat"
-search_result = searcher.search(text=" ")
+search_result = searcher.search(text="black")
 
 # Printing the results
 print(json.dumps(search_result, indent=4, sort_keys=True))
