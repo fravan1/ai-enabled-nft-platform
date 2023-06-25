@@ -1,4 +1,8 @@
 import React, { useState } from "react";
+import Link from "next/link";
+import type { NextPage } from "next";
+import { BugAntIcon, MagnifyingGlassIcon, SparklesIcon } from "@heroicons/react/24/outline";
+import { MetaHeader } from "~~/components/MetaHeader";
 
 const AiFetch = () => {
   const [char_address, setchar_address] = useState("");
@@ -56,53 +60,72 @@ const AiFetch = () => {
   };
 
   return (
-    <div className="flex flex-col gap-y-6 lg:gap-y-8 py-8 lg:py-12 justify-center items-center">
-      <form onSubmit={handleSubmit} className="flex flex-col gap-y-6 lg:gap-y-8">
-        <div className="flex flex-col gap-y-6 lg:gap-y-8">
-          <label htmlFor="char_address">Char address</label>
-          <input
-            id="char_address"
-            type="text"
-            placeholder="Enter char address"
-            value={char_address}
-            onChange={e => setchar_address(e.target.value)}
-            className="w-full max-w-7xl pb-1 px-6 lg:px-10 flex-wrap text-black"
-          />
+    <>
+      <div className="flex-grow  w-full mt-16 px-8 py-12">
+        <div className="flex justify-center items-center gap-12 flex-col sm:flex-row">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-y-6 lg:gap-y-8">
+            <div className="flex flex-col gap-y-6 lg:gap-y-8">
+              <label htmlFor="char_address">Char address</label>
+              <input
+                id="char_address"
+                type="text"
+                placeholder="Enter char address"
+                value={char_address}
+                onChange={e => setchar_address(e.target.value)}
+                className="w-full max-w-7xl pb-1 px-6 lg:px-10 flex-wrap text-black"
+              />
+            </div>
+            <div className="flex flex-col gap-y-6 lg:gap-y-8">
+              <label htmlFor="token_id">Token ID</label>
+              <input
+                id="token_id"
+                type="text"
+                placeholder="Enter token ID"
+                value={token_id}
+                onChange={e => settoken_id(e.target.value)}
+                className="w-full max-w-7xl pb-1 px-6 lg:px-10 flex-wrap text-black"
+              />
+            </div>
+            <button
+              type="submit"
+              className="btn btn-secondary btn-sm normal-case font-thin bg-base-300"
+              disabled={loading}
+            >
+              {loading ? "Loading..." : "Fetch AI data"}
+            </button>
+          </form>
+          <div className="flex flex-col bg-base-100 px-10 py-10 text-center items-center max-w-xs rounded-3xl">
+            <SparklesIcon className="h-8 w-8 fill-secondary" />
+            <p>
+              {" "}
+              {/* 0x5825f8948b32DA4E18784f27B4AF4390612a8Fe1 */}
+              <Link href={`https://xmtp.pages.dev/dm/${char_address}`} passHref className="link">
+                XMTP.org
+              </Link>{" "}
+            </p>
+          </div>
         </div>
-        <div className="flex flex-col gap-y-6 lg:gap-y-8">
-          <label htmlFor="token_id">Token ID</label>
-          <input
-            id="token_id"
-            type="text"
-            placeholder="Enter token ID"
-            value={token_id}
-            onChange={e => settoken_id(e.target.value)}
-            className="w-full max-w-7xl pb-1 px-6 lg:px-10 flex-wrap text-black"
-          />
+      </div>
+
+      <div className="flex-grow bg-base-300 w-full mt-16 px-8 py-12">
+        <div className="flex justify-center items-center gap-12 flex-col sm:flex-row">
+          <div className="flex flex-col bg-base-100 px-2 py-2 text-center items-center max-w-xs rounded-2xl">
+            <img src="bgImg/bg8.avif" alt="Image 1" className="w-full h-auto rounded-2xl" />
+          </div>
         </div>
-        <button type="submit" className="btn btn-secondary btn-sm normal-case font-thin bg-base-300" disabled={loading}>
-          {loading ? "Loading..." : "Fetch AI data"}
-        </button>
-      </form>
-      {aiData && (
-        <div className="flex flex-col gap-y-6 lg:gap-y-8">
-          <label htmlFor="aiData">AI data</label>
-          <textarea
-            id="aiData"
-            value={aiData}
-            readOnly
-            className="w-full max-w-7xl pb-1 px-6 lg:px-10 flex-wrap text-black textarea-large"
-          />
+        <div className="flex justify-center items-center gap-12 flex-col sm:flex-row">
+          {tableData && (
+            <div className="flex flex-col gap-y-6 lg:gap-y-8">
+              <br />
+              <br />
+              <div dangerouslySetInnerHTML={{ __html: tableData.outerHTML }} />
+            </div>
+          )}
+          {error && <p className="text-red-500">{error}</p>}
         </div>
-      )}
-      {tableData && (
-        <div className="flex flex-col gap-y-6 lg:gap-y-8">
-          <label htmlFor="aiData">AI data table</label>
-          <div dangerouslySetInnerHTML={{ __html: tableData.outerHTML }} />
-        </div>
-      )}
-      {error && <p className="text-red-500">{error}</p>}
-    </div>
+              
+      </div>
+    </>
   );
 };
 

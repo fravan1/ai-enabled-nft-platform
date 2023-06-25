@@ -34,3 +34,8 @@ p {
 .text-black {
   color: #000;
 }
+
+.textarea-large {
+  width: 500px;
+  height: 200px;
+}
