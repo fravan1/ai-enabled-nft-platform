@@ -1,6 +1,7 @@
 import requests
 import urllib.request
 import csv
+from flask import jsonify
 
 # Azure Cognitive Services API endpoint and key
 endpoint = "https://waterlootest.cognitiveservices.azure.com/vision/v3.2/analyze"
@@ -57,11 +58,15 @@ def get_asset(contract_address, token_id):
 
         last_sale = asset_data.get('last_sale', {})
 
-    else:
-        print("Failed to fetch OpenSea asset:", response.status_code)
+        metadata = {
+            'image_url': image_url,
+            'address': address,
+            'chain_identifier': chain_identifier,
+            'schema_name': schema_name,
+            'description': description,
+            'last_sale': last_sale
+        }
 
-    # Handle the response
-    if response.status_code == 200:
         # download the image & call the convert_to_binary function
         image_data = urllib.request.urlopen(image_url).read()
         generated_data = process_image(image_data)
@@ -73,52 +78,58 @@ def get_asset(contract_address, token_id):
         rich_data['ImageType'] = generated_data['imageType']
         rich_data['Objects'] = generated_data['objects'][0].keys()
         rich_data['Tags'] = generated_data['tags']
+
+        return metadata, rich_data
     else:
         print("Error:", response.status_code, response.text)
 
-    # Save data to CSV file
-    with open('metadata.csv', 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(['Image URL', 'Address', 'Chain Identifier', 'Schema Name', 'Description', 'Last Sale', 'rich_data'])
-        writer.writerow([image_url, address, chain_identifier, schema_name, description, last_sale, rich_data])
+    # def get_asset_route():
+    #     with app.app_context():
+            # metadata, rich_data = get_asset('0x06012c8cf97BEaD5deAe237070F9587f8E7A266d', '1289127')
+            # return jsonify(metadata, rich_data)
 
-    print("Data saved to metadata.csv file.")
+            # Save data to CSV file
+metadata, rich_data = get_asset('0x06012c8cf97BEaD5deAe237070F9587f8E7A266d', '1289127')
+print(metadata, rich_data)
+            # with open('metadata.csv', 'w', newline='') as file:
+            #     writer = csv.writer(file)
+            #     writer.writerow(['Image URL', 'Address', 'Chain Identifier', 'Schema Name', 'Description', 'Last Sale', 'rich_data'])
+            #     writer.writerow([image_url, address, chain_identifier, schema_name, description, last_sale, rich_data])
 
-# going through all the assets in the collection & calling the get_asset() function for each asset
-def get_all_assets():
-    for i in range(1, 10):
-        get_asset('0x495f947276749ce646f68ac8c248420045cb7b5e', str(i))
+            # print("Data saved to metadata.csv file.")
 
 
+# final_output = get_asset('0x06012c8cf97BEaD5deAe237070F9587f8E7A266d', '1289127')
+# print(final_output)
 # Uploading each new text file generated from the json dump of get_asset() to IPFS Storage
 # using the base API : https://api.web3.storage/
 
-def upload_file(file):
+# def upload_file(file):
 
-    # Bearer token received during authentication
-    bearer_token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweGYyN2IxMDkxRjRiNDVFNzJERDg1RjBlRTY5RTIzMzcwOTgyQTkwRTAiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2ODc1OTQzNjA2MzIsIm5hbWUiOiJFVEhXYXRlcmxvbyJ9.fakf24JjopVQLKIuLOwq6BrV5HAGd1sPdacHe9OsZdw'
+#     # Bearer token received during authentication
+#     bearer_token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweGYyN2IxMDkxRjRiNDVFNzJERDg1RjBlRTY5RTIzMzcwOTgyQTkwRTAiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2ODc1OTQzNjA2MzIsIm5hbWUiOiJFVEhXYXRlcmxvbyJ9.fakf24JjopVQLKIuLOwq6BrV5HAGd1sPdacHe9OsZdw'
 
-    # API endpoint URL
-    url = 'https://api.web3.storage/upload'
+#     # API endpoint URL
+#     url = 'https://api.web3.storage/upload'
 
-    # Request headers with the Authorization header containing the bearer token
-    headers = {
-        'Authorization': f'Bearer {bearer_token}',
-        'Accept': 'application/json'
-    }
+#     # Request headers with the Authorization header containing the bearer token
+#     headers = {
+#         'Authorization': f'Bearer {bearer_token}',
+#         'Accept': 'application/json'
+#     }
 
-    # Request payload (multipart/form-data)
-    files = {
-        'file': ('data.txt', open('data.txt', 'rb'), 'text/plain')
-    }
+#     # Request payload (multipart/form-data)
+#     files = {
+#         'file': ('data.txt', open('data.txt', 'rb'), 'text/plain')
+#     }
 
-    # Send the POST request
-    response = requests.post(url, headers=headers, files=files)
+#     # Send the POST request
+#     response = requests.post(url, headers=headers, files=files)
 
-    # Check the response
-    if response.status_code == 200:
-        print('Request succeeded!')
-        print(response.json())  # Access the response body
-    else:
-        print(f'Request failed with status code {response.status_code}')
-        print(response.text)  # Access the error message if available
+#     # Check the response
+#     if response.status_code == 200:
+#         print('Request succeeded!')
+#         print(response.json())  # Access the response body
+#     else:
+#         print(f'Request failed with status code {response.status_code}')
+#         print(response.text)  # Access the error message if available
