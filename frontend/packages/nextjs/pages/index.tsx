@@ -14,7 +14,7 @@ const Home: NextPage = () => {
 
       <div className="bg-black-500 text-white flex items-center justify-center h-220 w-full">
         <img src="bgImg/bb1.avif" alt="Cover Photo" className="h-full w-full object-cover opacity-80" />
-        <h1 className="text-8xl font-bold absolute transform left-1/2 -translate-x-1/2 -translate-y-1/2">AI Feature</h1>
+        {/* <h1 className="text-8xl font-bold absolute transform left-1/2 -translate-x-1/2 -translate-y-1/2">AI Feature</h1> */}
       </div>
 
       <div className="flex items-center flex-col flex-grow pt-10">
@@ -27,16 +27,16 @@ const Home: NextPage = () => {
         <div className="flex-grow bg-base-300 w-full mt-16 px-8 py-12">
           <div className="flex justify-center items-center gap-12 flex-col sm:flex-row">
             <div className="flex flex-col bg-base-100 px-2 py-2 text-center items-center max-w-xs rounded-2xl">
-              <img src="bgImg/bg8.avif" alt="Image 1" className="w-full h-auto rounded-2xl" />
+              <img src="bgImg/bg1.avif" alt="Image 1" className="w-full h-auto rounded-2xl" />
             </div>
             <div className="flex flex-col bg-base-100 px-2 py-2 text-center items-center max-w-xs rounded-2xl">
-              <img src="bgImg/bg5.avif" alt="Image 1" className="w-full h-auto rounded-2xl" />
+              <img src="bgImg/bg2.webp" alt="Image 1" className="w-full h-auto rounded-2xl" />
             </div>
             <div className="flex flex-col bg-base-100 px-2 py-2 text-center items-center max-w-xs rounded-2xl">
-              <img src="bgImg/bg6.avif" alt="Image 2" className="w-full h-auto rounded-2xl" />
+              <img src="bgImg/bg3.webp" alt="Image 2" className="w-full h-auto rounded-2xl" />
             </div>
             <div className="flex flex-col bg-base-100 px-2 py-2 text-center items-center max-w-xs rounded-2xl">
-              <img src="bgImg/bg3.avif" alt="Image 3" className="w-full h-auto rounded-2xl" />
+              <img src="bgImg/bg4.svg" alt="Image 3" className="w-full h-auto rounded-2xl" />
             </div>
           </div>
         </div>
@@ -48,35 +48,27 @@ const Home: NextPage = () => {
               <BugAntIcon className="h-8 w-8 fill-secondary" />
               <p>
                 {" "}
-                <Link href="/debug" passHref className="link">
-                  AI Page
-                </Link>{" "}
-                tab.
+                <Link href="/aifetch" passHref className="link">
+                  AI Feature
+                </Link>
+               
               </p>
             </div>
             <div className="flex flex-col bg-base-100 px-10 py-10 text-center items-center max-w-xs rounded-3xl">
               <SparklesIcon className="h-8 w-8 fill-secondary" />
               <p>
                 {" "}
-                <Link href="/example-ui" passHref className="link">
-                GraphQL
+                <Link href="/aisearch" passHref className="link">
+                AI Search 
                 </Link>{" "}
-                UI.
+            
               </p>
             </div>
+            
             <div className="flex flex-col bg-base-100 px-10 py-10 text-center items-center max-w-xs rounded-3xl">
-              <SparklesIcon className="h-8 w-8 fill-secondary" />
+            <SparklesIcon className="h-8 w-8 fill-secondary" />
               <p>
-                {" "}
-                <Link href="/example-ui" passHref className="link">
-                XMTP.org 
-                </Link>{" "}
-              </p>
-            </div>
-            <div className="flex flex-col bg-base-100 px-10 py-10 text-center items-center max-w-xs rounded-3xl">
-              <MagnifyingGlassIcon className="h-8 w-8 fill-secondary" />
-              <p>
-                NFT Bundling <Link href="/blockexplorer" passHref className="link"></Link>
+                 <Link href="/ngtbundle" passHref className="link">NFT Bundling</Link>
               </p>
             </div>
           </div>
