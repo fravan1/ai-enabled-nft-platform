@@ -47,10 +47,10 @@ def upload_file(file):
         print('Request succeeded!')
         # returning CID for further usage
         return response.json()['value']['cid']
-
     else:
         print(f'Request failed with status code {response.status_code}')
         return None
+
 
 @Backend.route('/')
 def index():
@@ -127,21 +127,19 @@ def get_asset(contract_address, token_id):
 
 
 # Upload the json text file to IPFS Storage, get the CID, add it to the data & upload the data to Qdrant
-def update_db(image_metadata):
-    # Storing the image_metadata in a text file
-    with open('data.txt', 'w') as outfile:
-        json.dump(image_metadata, outfile)
+# def update_db(image_metadata):
+#     # Storing the image_metadata in a text file
+#     with open('data.txt', 'w') as outfile:
+#         json.dump(image_metadata, outfile)
 
-    # Uploading the data.txt file to IPFS Storage
-    file_cid = upload_file('data.txt')
+#     # Uploading the data.txt file to IPFS Storage
+#     file_cid = upload_file('data.txt')
 
-    # Adding the CID to the image_metadata
-    image_metadata['cid'] = file_cid
+#     # Adding the CID to the image_metadata
+#     image_metadata['cid'] = file_cid
 
-    # Extracting the values of the image_metadata as a list
-    values = list(image_metadata.values())
-
-
+#     # Extracting the values of the image_metadata as a list
+#     values = list(image_metadata.values())
 
 
 class Searcher:
