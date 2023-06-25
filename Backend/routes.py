@@ -2,8 +2,9 @@ import requests
 from flask import jsonify
 import requests
 import urllib.request
-
+import qdrant_client
 from Backend import Backend
+from sentence_transformers import SentenceTransformer
 
 # The backend only has API based access from the frontend and does not have any
 # HTML pages to render. The routes are defined here.
@@ -43,16 +44,18 @@ def get_asset(contract_address, token_id):
         image_url = asset_data.get('image_url')
 
         primary_asset_contracts = asset_data.get('asset_contract', {})
+        top_ownerships = asset_data.get('top_ownerships', [{}])[0]
         address = primary_asset_contracts.get('address')
+        owner_address = top_ownerships.get('owner', {}).get('address')
         chain_identifier = primary_asset_contracts.get('chain_identifier')
         schema_name = primary_asset_contracts.get('schema_name')
         description = primary_asset_contracts.get('description')
-
         last_sale = asset_data.get('last_sale', {})
 
         image_metadata = {
             'image_url': image_url,
             'address': address,
+            'owner_address': owner_address,
             'chain_identifier': chain_identifier,
             'schema_name': schema_name,
             'description': description,
@@ -89,11 +92,26 @@ def get_asset(contract_address, token_id):
 
     # Returning a Json object with Image URL, Address, Chain Identifier, Schema Name, Description, Last Sale, rich_data
     return jsonify(image_metadata)  
-    # Save data to CSV file
-    # with open('metadata.csv', 'w', newline='') as file:
-    #     writer = csv.writer(file)
-    #     writer.writerow(['Image URL', 'Address', 'Chain Identifier', 'Schema Name', 'Description', 'Last Sale', 'rich_data'])
-    #     writer.writerow([image_url, address, chain_identifier, schema_name, description, last_sale, rich_data])
 
-    # print("Data saved to metadata.csv file.")
 
+# API Route to get search results from the Qdrant API. The API gets the Query Text as the input & returns a jsonified list of results
+@Backend.route('/api/v1/search/<query_text>')
+def search(query_text):
+    # Function to create a Qdrant client
+    client = qdrant_client.QdrantClient(
+        url="https://b8d36498-676b-465e-a42e-a7d679b977bd.us-east-1-0.aws.cloud.qdrant.io:6333",
+        api_key="uB4HCvoYAYtoX0wr-FaBfsVSuGblAG4NlAz-wGPqWrG0WJBKZvB7Aw",
+    )
+
+    model = SentenceTransformer('paraphrase-MiniLM-L6-v2')
+    embeddings = model.encode(query_text)
+
+    breakpoint()
+    # Calling the search function to get the results
+    search_result = client.search(
+        collection_name="test_collection",
+        query_vector=embeddings,
+        query_filter=None,
+    )
+
+    return jsonify(search_result)
