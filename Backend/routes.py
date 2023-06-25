@@ -1,6 +1,6 @@
 import requests
 from flask import jsonify
-import requests
+import requests, json
 import urllib.request
 import qdrant_client
 from Backend import Backend
@@ -93,6 +93,30 @@ def get_asset(contract_address, token_id):
     # Returning a Json object with Image URL, Address, Chain Identifier, Schema Name, Description, Last Sale, rich_data
     return jsonify(image_metadata)  
 
+class Searcher:
+
+    def __init__(self, collection_name):
+        self.collection_name = collection_name
+        # initializing the client
+        self.qdrant_client = qdrant_client.QdrantClient(
+            url="https://b8d36498-676b-465e-a42e-a7d679b977bd.us-east-1-0.aws.cloud.qdrant.io:6333",
+            api_key="uB4HCvoYAYtoX0wr-FaBfsVSuGblAG4NlAz-wGPqWrG0WJBKZvB7Aw",
+        )
+    
+    def search(self, text):
+        # Convert text to vector
+        model = SentenceTransformer('paraphrase-distilroberta-base-v1')
+        embeddings = model.encode(text)
+
+        # use vector to search for closest vectors in the collection
+        search_result = self.qdrant_client.search(
+            collection_name=self.collection_name,
+            query_vector=embeddings,
+            query_filter=None,
+        )
+
+        payloads = [hit.payload for hit in search_result]
+        return payloads
 
 # API Route to get search results from the Qdrant API. The API gets the Query Text as the input & returns a jsonified list of results
 @Backend.route('/api/v1/search/<query_text>')
@@ -103,15 +127,14 @@ def search(query_text):
         api_key="uB4HCvoYAYtoX0wr-FaBfsVSuGblAG4NlAz-wGPqWrG0WJBKZvB7Aw",
     )
 
-    model = SentenceTransformer('paraphrase-MiniLM-L6-v2')
+    model = SentenceTransformer('paraphrase-distilroberta-base-v1')
     embeddings = model.encode(query_text)
 
     breakpoint()
-    # Calling the search function to get the results
-    search_result = client.search(
-        collection_name="test_collection",
-        query_vector=embeddings,
-        query_filter=None,
-    )
+    # Creating a new instance of the Searcher class
+    searcher = Searcher(collection_name="Noun")
 
-    return jsonify(search_result)
+    # Searching for the closest vectors to the word "cat"
+    search_result = searcher.search(text="black")    
+
+    return json.dumps(search_result, indent=4, sort_keys=True)
