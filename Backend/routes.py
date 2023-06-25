@@ -20,6 +20,38 @@ api_key = "d5833954c09b4fe38ec2463ab4078218"
 features = "Adult,Brands,Categories,Color,Description,Faces,ImageType,Objects,Tags"
 
 
+def upload_file(file):
+
+    # Bearer token received during authentication
+    bearer_token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweGYyN2IxMDkxRjRiNDVFNzJERDg1RjBlRTY5RTIzMzcwOTgyQTkwRTAiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2ODc1OTQzNjA2MzIsIm5hbWUiOiJFVEhXYXRlcmxvbyJ9.fakf24JjopVQLKIuLOwq6BrV5HAGd1sPdacHe9OsZdw'
+
+    # API endpoint URL
+    url = 'https://api.web3.storage/upload'
+
+    # Request headers with the Authorization header containing the bearer token
+    headers = {
+        'Authorization': f'Bearer {bearer_token}',
+        'Accept': 'application/json'
+    }
+
+    # Request payload (multipart/form-data)
+    files = {
+        'file': ('data.txt', open('data.txt', 'rb'), 'text/plain')
+    }
+
+    # Send the POST request
+    response = requests.post(url, headers=headers, files=files)
+
+    # Check the response
+    if response.status_code == 200:
+        print('Request succeeded!')
+        # returning CID for further usage
+        return response.json()['value']['cid']
+    else:
+        print(f'Request failed with status code {response.status_code}')
+        return None
+
+
 @Backend.route('/')
 def index():
     return jsonify({'message': 'Welcome to the backend'})
@@ -93,6 +125,23 @@ def get_asset(contract_address, token_id):
     # Returning a Json object with Image URL, Address, Chain Identifier, Schema Name, Description, Last Sale, rich_data
     return jsonify(image_metadata)  
 
+
+# Upload the json text file to IPFS Storage, get the CID, add it to the data & upload the data to Qdrant
+# def update_db(image_metadata):
+#     # Storing the image_metadata in a text file
+#     with open('data.txt', 'w') as outfile:
+#         json.dump(image_metadata, outfile)
+
+#     # Uploading the data.txt file to IPFS Storage
+#     file_cid = upload_file('data.txt')
+
+#     # Adding the CID to the image_metadata
+#     image_metadata['cid'] = file_cid
+
+#     # Extracting the values of the image_metadata as a list
+#     values = list(image_metadata.values())
+
+
 class Searcher:
 
     def __init__(self, collection_name):
@@ -117,6 +166,7 @@ class Searcher:
 
         payloads = [hit.payload for hit in search_result]
         return payloads
+
 
 # API Route to get search results from the Qdrant API. The API gets the Query Text as the input & returns a jsonified list of results
 @Backend.route('/api/v1/search/<query_text>')
