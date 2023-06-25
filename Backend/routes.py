@@ -130,7 +130,6 @@ def search(query_text):
     model = SentenceTransformer('paraphrase-distilroberta-base-v1')
     embeddings = model.encode(query_text)
 
-    breakpoint()
     # Creating a new instance of the Searcher class
     searcher = Searcher(collection_name="Noun")
 
