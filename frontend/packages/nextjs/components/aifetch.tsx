@@ -11,6 +11,8 @@ const AiFetch = () => {
   const [tableData, setTableData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
+  const [desc, setDesc] = useState("");
 
   const jsonToTable = (data, className = "json-table") => {
     let table = document.createElement("table");
@@ -49,10 +51,15 @@ const AiFetch = () => {
         },
         body: JSON.stringify({ char_address, token_id }),
       });
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
       const data = await res.json();
       console.log(data);
       setAiData(JSON.stringify(data, null, 2));
       setTableData(jsonToTable(data));
+      setImageUrl(data.data.image_url); // Set image url
+      setDesc(data.data.rich_data.Description); // Set rich_data.Description
     } catch (error) {
       setError(error.message);
     } finally {
@@ -111,18 +118,22 @@ const AiFetch = () => {
       <div className="flex-grow bg-base-300 w-full mt-16 px-8 py-12">
         <div className="flex justify-center items-center gap-12 flex-col sm:flex-row">
           <div className="flex flex-col bg-base-100 px-2 py-2 text-center items-center max-w-xs rounded-2xl">
-            <img src="bgImg/bg8.avif" alt="Image 1" className="w-full h-auto rounded-2xl" />
+            <img src={imageUrl} alt="Image 1" className="w-full h-auto rounded-2xl" />
+            <br />
+            <h2>{desc}</h2>
           </div>
         </div>
         <div className="flex justify-center items-center gap-12 flex-col sm:flex-row">
           {tableData && (
             <div className="flex flex-col gap-y-6 lg:gap-y-8">
               <br />
+              <br />
               <div dangerouslySetInnerHTML={{ __html: tableData.outerHTML }} />
             </div>
           )}
           {error && <p className="text-red-500">{error}</p>}
         </div>
+              
       </div>
     </>
   );

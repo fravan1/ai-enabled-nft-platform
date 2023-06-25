@@ -42,13 +42,13 @@ export const Header = () => {
       <li>
         <NavLink href="/aifetch">
           <BugAntIcon className="h-4 w-4" />
-          AI_Feature
+          AI_Fetch
         </NavLink>
       </li>
       <li>
-        <NavLink href="/example-ui">
+        <NavLink href="/aisearch">
           <SparklesIcon className="h-4 w-4" />
-          GraphQL
+          SearchNft
         </NavLink>
       </li>
       <li>
