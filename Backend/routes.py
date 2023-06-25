@@ -1,6 +1,6 @@
 import requests
 from flask import jsonify
-import requests
+import requests, json
 import urllib.request
 import qdrant_client
 from Backend import Backend
@@ -18,6 +18,38 @@ azure_endpoint = "https://waterlootest.cognitiveservices.azure.com/vision/v3.2/a
 api_key = "d5833954c09b4fe38ec2463ab4078218"
 # Features to include in the analysis
 features = "Adult,Brands,Categories,Color,Description,Faces,ImageType,Objects,Tags"
+
+
+def upload_file(file):
+
+    # Bearer token received during authentication
+    bearer_token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweGYyN2IxMDkxRjRiNDVFNzJERDg1RjBlRTY5RTIzMzcwOTgyQTkwRTAiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2ODc1OTQzNjA2MzIsIm5hbWUiOiJFVEhXYXRlcmxvbyJ9.fakf24JjopVQLKIuLOwq6BrV5HAGd1sPdacHe9OsZdw'
+
+    # API endpoint URL
+    url = 'https://api.web3.storage/upload'
+
+    # Request headers with the Authorization header containing the bearer token
+    headers = {
+        'Authorization': f'Bearer {bearer_token}',
+        'Accept': 'application/json'
+    }
+
+    # Request payload (multipart/form-data)
+    files = {
+        'file': ('data.txt', open('data.txt', 'rb'), 'text/plain')
+    }
+
+    # Send the POST request
+    response = requests.post(url, headers=headers, files=files)
+
+    # Check the response
+    if response.status_code == 200:
+        print('Request succeeded!')
+        # returning CID for further usage
+        return response.json()['value']['cid']
+    else:
+        print(f'Request failed with status code {response.status_code}')
+        return None
 
 
 @Backend.route('/')
@@ -94,6 +126,48 @@ def get_asset(contract_address, token_id):
     return jsonify(image_metadata)  
 
 
+# Upload the json text file to IPFS Storage, get the CID, add it to the data & upload the data to Qdrant
+# def update_db(image_metadata):
+#     # Storing the image_metadata in a text file
+#     with open('data.txt', 'w') as outfile:
+#         json.dump(image_metadata, outfile)
+
+#     # Uploading the data.txt file to IPFS Storage
+#     file_cid = upload_file('data.txt')
+
+#     # Adding the CID to the image_metadata
+#     image_metadata['cid'] = file_cid
+
+#     # Extracting the values of the image_metadata as a list
+#     values = list(image_metadata.values())
+
+
+class Searcher:
+
+    def __init__(self, collection_name):
+        self.collection_name = collection_name
+        # initializing the client
+        self.qdrant_client = qdrant_client.QdrantClient(
+            url="https://b8d36498-676b-465e-a42e-a7d679b977bd.us-east-1-0.aws.cloud.qdrant.io:6333",
+            api_key="uB4HCvoYAYtoX0wr-FaBfsVSuGblAG4NlAz-wGPqWrG0WJBKZvB7Aw",
+        )
+    
+    def search(self, text):
+        # Convert text to vector
+        model = SentenceTransformer('paraphrase-distilroberta-base-v1')
+        embeddings = model.encode(text)
+
+        # use vector to search for closest vectors in the collection
+        search_result = self.qdrant_client.search(
+            collection_name=self.collection_name,
+            query_vector=embeddings,
+            query_filter=None,
+        )
+
+        payloads = [hit.payload for hit in search_result]
+        return payloads
+
+
 # API Route to get search results from the Qdrant API. The API gets the Query Text as the input & returns a jsonified list of results
 @Backend.route('/api/v1/search/<query_text>')
 def search(query_text):
@@ -103,15 +177,13 @@ def search(query_text):
         api_key="uB4HCvoYAYtoX0wr-FaBfsVSuGblAG4NlAz-wGPqWrG0WJBKZvB7Aw",
     )
 
-    model = SentenceTransformer('paraphrase-MiniLM-L6-v2')
+    model = SentenceTransformer('paraphrase-distilroberta-base-v1')
     embeddings = model.encode(query_text)
 
-    breakpoint()
-    # Calling the search function to get the results
-    search_result = client.search(
-        collection_name="test_collection",
-        query_vector=embeddings,
-        query_filter=None,
-    )
+    # Creating a new instance of the Searcher class
+    searcher = Searcher(collection_name="Noun")
 
-    return jsonify(search_result)
+    # Searching for the closest vectors to the word "cat"
+    search_result = searcher.search(text="black")    
+
+    return json.dumps(search_result, indent=4, sort_keys=True)
