@@ -3,10 +3,12 @@ import urllib.request
 
 
 # Azure Cognitive Services API endpoint and key
-endpoint = "https://waterlootest.cognitiveservices.azure.com/vision/v3.2/analyze"
+endpoint = "https://waterlootest.cognitiveservices.azure.com/vision/v4.0/analyze"
 api_key = "e7b18d719c324918a038199c4d9564eb"
 # Features to include in the analysis
-features = "Adult,Brands,Categories,Color,Description,Faces,ImageType,Objects,Tags"
+# Models to include in the analysis
+
+models = "Adult,Brands,Categories,Color,Description,Faces,ImageType,Objects,Tags"
 
 
 def process_image(data):
@@ -18,7 +20,7 @@ def process_image(data):
 
     # Request parameters
     params = {
-        'visualFeatures': features,
+        'models': models,
         'language': 'en'
     }
 
@@ -49,9 +51,10 @@ def get_asset(contract_address, token_id):
         # download the image & call the convert_to_binary function
         image_data = urllib.request.urlopen(image_url).read()
         generated_data = process_image(image_data)
+        print(generated_data)
         # Storing the generated data in a text file
-        with open('data.txt', 'w') as outfile:
-            outfile.write(str(generated_data))
+        # with open('data.txt', 'w') as outfile:
+        #     outfile.write(str(generated_data))
     else:
         print("Error:", response.status_code, response.text)
 
@@ -92,5 +95,5 @@ def upload_file(file):
         print(response.text)  # Access the error message if available
 
 
-with open('data.txt', 'rb') as f:
-    upload_file(f)
+# with open('data.txt', 'rb') as f:
+#     upload_file(f)

@@ -1,4 +1,5 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { AIFetch } from "../../AIFetch";
 import { Abi } from "abitype";
 import { useContract, useProvider } from "wagmi";
 import { Spinner } from "~~/components/Spinner";
@@ -29,6 +30,21 @@ export const ContractUI = ({ contractName, className = "" }: ContractUIProps) =>
 
   const { data: deployedContractData, isLoading: deployedContractLoading } = useDeployedContractInfo(contractName);
   const networkColor = useNetworkColor();
+  const [searchKeyword, setSearchKeyword] = useState("");
+
+  const fetchData = async () => {
+    const response = await fetch(`https://api.example.com/search?query=${searchKeyword}`);
+    const data = await response.json();
+    // Update your state with the fetched data
+  };
+
+  const handleSearchChange = e => {
+    setSearchKeyword(e.target.value);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [searchKeyword]);
 
   const contract = useContract({
     address: deployedContractData?.address,
@@ -89,35 +105,10 @@ export const ContractUI = ({ contractName, className = "" }: ContractUIProps) =>
               </p>
             )}
           </div>
-          <div className="bg-base-300 rounded-3xl px-6 lg:px-8 py-4 shadow-lg shadow-base-300">
-            {contractVariablesDisplay.methods.length > 0 ? contractVariablesDisplay.methods : "No contract variables"}
-          </div>
         </div>
-        <div className="col-span-1 lg:col-span-2 flex flex-col gap-6">
-          <div className="z-10">
-            <div className="bg-base-100 rounded-3xl shadow-md shadow-secondary border border-base-300 flex flex-col mt-10 relative">
-              <div className="h-[5rem] w-[5.5rem] bg-base-300 absolute self-start rounded-[22px] -top-[38px] -left-[1px] -z-10 py-[0.65rem] shadow-lg shadow-base-300">
-                <div className="flex items-center justify-center space-x-2">
-                  <p className="my-0 text-sm">Read</p>
-                </div>
-              </div>
-              <div className="p-5 divide-y divide-base-300">
-                {contractMethodsDisplay.methods.length > 0 ? contractMethodsDisplay.methods : "No read methods"}
-              </div>
-            </div>
-          </div>
-          <div className="z-10">
-            <div className="bg-base-100 rounded-3xl shadow-md shadow-secondary border border-base-300 flex flex-col mt-10 relative">
-              <div className="h-[5rem] w-[5.5rem] bg-base-300 absolute self-start rounded-[22px] -top-[38px] -left-[1px] -z-10 py-[0.65rem] shadow-lg shadow-base-300">
-                <div className="flex items-center justify-center space-x-2">
-                  <p className="my-0 text-sm">Write</p>
-                </div>
-              </div>
-              <div className="p-5 divide-y divide-base-300">
-                {contractWriteMethods.methods.length > 0 ? contractWriteMethods.methods : "No write methods"}
-              </div>
-            </div>
-          </div>
+        <div>
+          Data from API
+          {/* <AIFetch /> */}
         </div>
       </div>
     </div>
