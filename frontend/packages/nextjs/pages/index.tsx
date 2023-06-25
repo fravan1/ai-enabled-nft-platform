@@ -13,7 +13,7 @@ const Home: NextPage = () => {
     </div> */}
 
       <div className="bg-black-500 text-white flex items-center justify-center h-220 w-full">
-        <img src="bgImg/bb1.avif" alt="Cover Photo" className="h-full w-full object-cover opacity-80" />
+        <img src="banners/1.png" alt="Cover Photo" className="h-500 w-full object-cover opacity-100" />
         {/* <h1 className="text-8xl font-bold absolute transform left-1/2 -translate-x-1/2 -translate-y-1/2">AI Feature</h1> */}
       </div>
 
