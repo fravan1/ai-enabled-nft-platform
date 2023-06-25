@@ -5,20 +5,10 @@ import Link from "next/link";
 import type { NextPage } from "next";
 import { MetaHeader } from "~~/components/MetaHeader";
 
-const Card = ({ item }) => (
-  <div className="card">
-    <h1>{item.Description}</h1>
-    <img src={`https://noun.pics/${item.Noun}`} />
-    <p>Accessory: {item.Accessory}</p>
-    <p>Body: {item.Body}</p>
-    <p>Born: {item.Born}</p>
-    {/* Add other properties as needed */}
-  </div>
-);
-
 const AiSearch = () => {
   const [search_query, setSearchQuery] = useState("");
-  const [aiData, setAiData] = useState("");
+  const [aiData, setAiData] = useState([]);
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -35,7 +25,7 @@ const AiSearch = () => {
       });
       const data = await res.json();
       console.log(data);
-      setAiData(JSON.stringify(data, null, 2));
+      setAiData(Array.isArray(data) ? data : [data]);
     } catch (error) {
       setError(error.message);
     } finally {
@@ -71,10 +61,26 @@ const AiSearch = () => {
             </form>
             {loading && <p>Loading...</p>}
             {error && <p>Error: {error}</p>}
-            {aiData && (
-              <div className="card-container">
-                {JSON.parse(aiData).data.map((item, index) => (
-                  <Card key={index} item={item} />
+            {aiData.length > 0 && (
+              <div className="grid grid-cols-3 gap-4">
+                {aiData.map((item, index) => (
+                  <div key={index} className="p-4 border-2 border-gray-200 rounded-md">
+                    <h2 className="text-xl font-bold">Item {index + 1}</h2>
+                    <p className="mt-2">Description: {item.Description}</p>
+                    <p className="mt-2">Born: {item.Born}</p>
+                    <p className="mt-2">Body: {item.Body}</p>
+                    <p className="mt-2">Head: {item.Head}</p>
+                    <p className="mt-2">Glasses: {item.Glasses}</p>
+                    <p className="mt-2">Accessory: {item.Accessory}</p>
+                    <p className="mt-2">Noun: {item.Noun}</p>
+                    <p className="mt-2">Categories: {item.Categories}</p>
+                    {item.Tags &&
+                      item.Tags.map((tag, i) => (
+                        <p key={i} className="mt-2">
+                          Tag: {tag.name} - Confidence: {tag.confidence}
+                        </p>
+                      ))}
+                  </div>
                 ))}
               </div>
             )}

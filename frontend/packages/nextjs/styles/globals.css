@@ -39,3 +39,24 @@ p {
   width: 500px;
   height: 200px;
 }
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.card {
+  flex: 0 0 calc(33.333% - 1rem); /* Adjust this value for 3-column layout */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+input {
+  color: black;
+}
+h1 {
+  font-weight: bold;
+  text-transform: capitalize;
+}

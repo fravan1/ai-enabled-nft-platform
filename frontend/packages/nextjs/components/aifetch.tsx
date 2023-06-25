@@ -13,6 +13,7 @@ const AiFetch = () => {
   const [error, setError] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [desc, setDesc] = useState("");
+  const [owner, setOwner] = useState("");
 
   const jsonToTable = (data, className = "json-table") => {
     let table = document.createElement("table");
@@ -60,6 +61,9 @@ const AiFetch = () => {
       setTableData(jsonToTable(data));
       setImageUrl(data.data.image_url); // Set image url
       setDesc(data.data.rich_data.Description); // Set rich_data.Description
+      setOwner(data.data.owner_address);
+      console.log(owner);
+      // Set rich_data.Description
     } catch (error) {
       setError(error.message);
     } finally {
@@ -69,6 +73,9 @@ const AiFetch = () => {
 
   return (
     <>
+      <h1 className="text-6xl mx-auto font-bold mt-10">
+        <span className="text-blue-600">AI</span> Search
+      </h1>
       <div className="flex-grow  w-full mt-16 px-8 py-12">
         <div className="flex justify-center items-center gap-12 flex-col sm:flex-row">
           <form onSubmit={handleSubmit} className="flex flex-col gap-y-6 lg:gap-y-8">
@@ -106,9 +113,8 @@ const AiFetch = () => {
             <SparklesIcon className="h-8 w-8 fill-secondary" />
             <p>
               {" "}
-              {/* 0x5825f8948b32DA4E18784f27B4AF4390612a8Fe1 */}
-              <Link href={`https://xmtp.pages.dev/dm/${char_address}`} passHref className="link">
-                XMTP.org
+              <Link href={`https://xmtp.pages.dev/dm/${owner}`} passHref target="blank" className="link">
+                Chat w/ {owner.slice(0, 6)}...{owner.slice(-6, -1)}
               </Link>{" "}
             </p>
           </div>
