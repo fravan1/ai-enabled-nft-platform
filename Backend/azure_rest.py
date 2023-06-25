@@ -4,7 +4,7 @@ import urllib.request
 
 # Azure Cognitive Services API endpoint and key
 endpoint = "https://waterlootest.cognitiveservices.azure.com/vision/v3.2/analyze"
-api_key = "e7b18d719c324918a038199c4d9564eb"
+api_key = "d5833954c09b4fe38ec2463ab4078218"
 # Features to include in the analysis
 features = "Adult,Brands,Categories,Color,Description,Faces,ImageType,Objects,Tags"
 
@@ -24,7 +24,7 @@ def process_image(data):
 
     # Send the REST request
     response = requests.post(endpoint, headers=headers, params=params, data=data)
-
+    breakpoint()
     # Handle the response
     if response.status_code == 200:
         return(response.json())
