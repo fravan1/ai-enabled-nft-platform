@@ -50,6 +50,7 @@ const AiFetch = () => {
         body: JSON.stringify({ char_address, token_id }),
       });
       const data = await res.json();
+      console.log(data);
       setAiData(JSON.stringify(data, null, 2));
       setTableData(jsonToTable(data));
     } catch (error) {
@@ -117,13 +118,11 @@ const AiFetch = () => {
           {tableData && (
             <div className="flex flex-col gap-y-6 lg:gap-y-8">
               <br />
-              <br />
               <div dangerouslySetInnerHTML={{ __html: tableData.outerHTML }} />
             </div>
           )}
           {error && <p className="text-red-500">{error}</p>}
         </div>
-              
       </div>
     </>
   );
