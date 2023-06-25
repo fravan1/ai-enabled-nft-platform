@@ -15,7 +15,7 @@ export default async function handler(req, res) {
 
   // Sending the REST Call to localhost:5000/api/v1/get_asset/<Charachter Address>/<Token ID>
   // Sending the request as a GET request
-    const response = await fetch(`http://localhost:5000/api/v1/get_asset/${body.char_address}/${body.token_id}`, {
+    const response = await fetch(`http://localhost:5001/api/v1/get_asset/${body.char_address}/${body.token_id}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
