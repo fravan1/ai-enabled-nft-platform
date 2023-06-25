@@ -44,7 +44,7 @@ const NFTBUNDLE: NextPage = () => {
                 <div className="col-start-2 max-w-md mx-10 bg-white shadow-md rounded-lg overflow-hidden">
                     <div className="p-4">
                         {/* <!-- Image --> */}
-                        <img src="bgImg/bg8.avif" alt="Image" className="w-full mb-4"/>
+                        <img src="bgImg/bg8.svg" alt="Image" className="w-full mb-4"/>
 
                         {/* <!-- Like/Dislike buttons --> */}
                         <div className="flex items-center justify-between mb-4 space-x-4">
