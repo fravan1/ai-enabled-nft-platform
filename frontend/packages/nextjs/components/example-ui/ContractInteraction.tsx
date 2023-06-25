@@ -10,6 +10,7 @@ export const ContractInteraction = () => {
   const [visible, setVisible] = useState(true);
   const [newGreeting, setNewGreeting] = useState("");
   const [nfts, setNfts] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const getNfts = async () => {
@@ -46,7 +47,7 @@ export const ContractInteraction = () => {
             />
             <div className="flex rounded-full border border-primary p-1 flex-shrink-0">
               <div className="flex rounded-full border-2 border-primary p-1">
-                <button
+                {/* <button
                   className={`btn btn-primary rounded-full capitalize font-normal font-white w-30 flex items-center gap-1 hover:gap-2 transition-all tracking-widest ${
                     isLoading ? "loading" : ""
                   }`}
@@ -57,7 +58,7 @@ export const ContractInteraction = () => {
                       Display <ArrowSmallRightIcon className="w-3 h-3 mt-0.5" />
                     </>
                   )}
-                </button>
+                </button> */}
               </div>
             </div>
           </div>
