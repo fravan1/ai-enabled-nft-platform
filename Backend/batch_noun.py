@@ -9,15 +9,15 @@ from sklearn.decomposition import PCA
 import numpy as np
 
 # Azure Cognitive Services API endpoint and key
-endpoint = "https://waterlootest.cognitiveservices.azure.com/vision/v3.2/analyze"
-api_key = "e7b18d719c324918a038199c4d9564eb"
+endpoint = ""
+api_key = ""
 # Features to include in the analysis
 features = "Brands,Categories,Color,Description,Objects,Tags"
 
 # Function to create a Qdrant client
 qdrant_client = QdrantClient(
-    url="https://b8d36498-676b-465e-a42e-a7d679b977bd.us-east-1-0.aws.cloud.qdrant.io:6333", 
-    api_key="uB4HCvoYAYtoX0wr-FaBfsVSuGblAG4NlAz-wGPqWrG0WJBKZvB7Aw",
+    url="", 
+    api_key="",
 )
 
 def process_image(image_url):
