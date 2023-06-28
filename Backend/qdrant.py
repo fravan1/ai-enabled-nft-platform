@@ -7,8 +7,8 @@ from sentence_transformers import SentenceTransformer
 
 # Function to create a Qdrant client
 qdrant_client = QdrantClient(
-    url="https://b8d36498-676b-465e-a42e-a7d679b977bd.us-east-1-0.aws.cloud.qdrant.io:6333", 
-    api_key="uB4HCvoYAYtoX0wr-FaBfsVSuGblAG4NlAz-wGPqWrG0WJBKZvB7Aw",
+    url="", 
+    api_key="",
 )
 
 # Loading the metadata.csv file and parsing row, by row, where each row deontes a token
@@ -58,8 +58,8 @@ class Searcher:
         self.collection_name = collection_name
         # initializing the client
         self.qdrant_client = QdrantClient(
-            url="https://b8d36498-676b-465e-a42e-a7d679b977bd.us-east-1-0.aws.cloud.qdrant.io:6333",
-            api_key="uB4HCvoYAYtoX0wr-FaBfsVSuGblAG4NlAz-wGPqWrG0WJBKZvB7Aw",
+            url="",
+            api_key="",
         )
     
     def search(self, text):
