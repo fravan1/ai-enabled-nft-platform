@@ -14,15 +14,15 @@ from sentence_transformers import SentenceTransformer
 # The API returns a JSON object with the asset details
 
 # Azure Cognitive Services API endpoint and key
-azure_endpoint = "https://waterlootest.cognitiveservices.azure.com/vision/v3.2/analyze"
-api_key = "d5833954c09b4fe38ec2463ab4078218"
+azure_endpoint = ""
+api_key = ""
 # Features to include in the analysis
 features = "Adult,Brands,Categories,Color,Description,Faces,ImageType,Objects,Tags"
 
 def upload_file(file):
 
     # Bearer token received during authentication
-    bearer_token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweGYyN2IxMDkxRjRiNDVFNzJERDg1RjBlRTY5RTIzMzcwOTgyQTkwRTAiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2ODc1OTQzNjA2MzIsIm5hbWUiOiJFVEhXYXRlcmxvbyJ9.fakf24JjopVQLKIuLOwq6BrV5HAGd1sPdacHe9OsZdw'
+    bearer_token = ''
 
     # API endpoint URL
     url = 'https://api.web3.storage/upload'
