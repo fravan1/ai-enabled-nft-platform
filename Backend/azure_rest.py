@@ -3,8 +3,8 @@ import urllib.request
 
 
 # Azure Cognitive Services API endpoint and key
-endpoint = "https://waterlootest.cognitiveservices.azure.com/vision/v3.2/analyze"
-api_key = "d5833954c09b4fe38ec2463ab4078218"
+endpoint = ""
+api_key = ""
 # Features to include in the analysis
 features = "Adult,Brands,Categories,Color,Description,Faces,ImageType,Objects,Tags"
 
@@ -36,7 +36,7 @@ def get_asset(contract_address, token_id):
 
     headers = {
         'Accept': 'application/json',
-        'X-API-KEY': '02d7d6fbe51f446681317e33e5bd7468',
+        'X-API-KEY': '',
     }
 
     # Send the REST request to get the Asset's Image URL
@@ -64,7 +64,7 @@ get_asset('0x629A673A8242c2AC4B7B8C5D8735fbeac21A6205', '12709891047617468549396
 def upload_file(file):
 
     # Bearer token received during authentication
-    bearer_token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweGYyN2IxMDkxRjRiNDVFNzJERDg1RjBlRTY5RTIzMzcwOTgyQTkwRTAiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2ODc1OTQzNjA2MzIsIm5hbWUiOiJFVEhXYXRlcmxvbyJ9.fakf24JjopVQLKIuLOwq6BrV5HAGd1sPdacHe9OsZdw'
+    bearer_token = ''
 
     # API endpoint URL
     url = 'https://api.web3.storage/upload'
