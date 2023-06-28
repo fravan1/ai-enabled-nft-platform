@@ -1,8 +1,8 @@
 import os
 import azure.cognitiveservices.vision.computervision as sdk
 
-service_options = sdk.VisionServiceOptions("https://waterlootest.cognitiveservices.azure.com",
-                                           "e7b18d719c324918a038199c4d9564eb")
+service_options = sdk.VisionServiceOptions("endpoint",
+                                           "API Key")
 
 vision_source = sdk.VisionSource(
     url="https://learn.microsoft.com/azure/cognitive-services/computer-vision/media/quickstarts/presentation.png")
