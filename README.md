@@ -6,4 +6,4 @@ The infrastructure was designed keeping in mind the development down the line - 
 
 This solution was developed as a hackathon project, and I am not planning to continue maintaining it. 
 
-If you're interested and want to collaborate for further development, please reach out on rutvikrj26@gmail.com 
+If you're interested and want to collaborate for further development, please reach out on rutvikrj26@gmail.com or thomas.melbin4@gmail.com
