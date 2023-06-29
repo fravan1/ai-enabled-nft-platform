@@ -1,4 +1,4 @@
-# Discovia
+# Discova
 
 Discovia is a platform designed to improve the discoverability of NFTs. It utilizes computer vision-based image processing for a contextual understanding of the NFTs(image usecase implemented) followed by text-based vector & semantic embeddings and storage on a Vector Database(Qdrant implementation - can be easily switched to pinecone or any other VectorDB). 
 
